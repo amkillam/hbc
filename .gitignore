@@ -6,4 +6,5 @@
 *.dSYM
 *.pyc
 .DS_Store
+out
 
