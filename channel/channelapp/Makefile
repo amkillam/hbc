@@ -36,9 +36,16 @@ DIR_LIBS = \
 LIBS = mxml freetype png bz2 z db fat wiiuse bte ogc m
 
 MACHDEP = -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float
-CFLAGS = $(MACHDEP) -Os -Wall -DBASE_ADDR=$(BASE_ADDR) $(DIR_INCLUDES:%=-I%)
+MATHCONSTS = -D__MATH_CONSTANTS_DEFINED -D__MATH_CONSTANTS \
+						 -DM_PI=3.14159265358979323846 -DM_PI_2=1.57079632679489661923 \
+						 -DM_PI_4=0.78539816339744830962 -DM_1_PI=0.31830988618379067154 \
+						 -DM_2_PI=0.63661977236758134308 -DM_2_SQRTPI=1.12837916709551257390 \
+						 -DM_SQRT2=1.41421356237309504880 -DM_SQRT1_2=0.70710678118654752440 \
+						 -DM_2_PI=0.63661977236758134308 -DM_TWOPI=0.63661977236758134308 \
+						 -DM_2_SQRTPI=1.12837916709551257390 
+CFLAGS = $(MACHDEP) $(MATHCONSTS) -Os -Wall -DBASE_ADDR=$(BASE_ADDR) -std=c11 $(DIR_INCLUDES:%=-I%) -Wno-int-conversion -Wno-implicit-function-declaration
 # using -Os for the stub makes it dependent on libgcc
-CFLAGS_STUB = $(MACHDEP) -O2 -Wall -DBASE_ADDR=$(BASE_ADDR) $(DIR_INCLUDES:%=-I%)
+CFLAGS_STUB = $(MACHDEP) $(MATHCONSTS) -O2 -Wall -DBASE_ADDR=$(BASE_ADDR) -std=c11 $(DIR_INCLUDES:%=-I%) -Wno-int-conversion -Wno-implicit-function-declaration
 ASFLAGS = -D_LANGUAGE_ASSEMBLY -DHW_RVL
 LDFLAGS_STUB = $(MACHDEP) -Wl,--section-start,.init=0x80001800 -nostartfiles -nodefaultlibs
 LDFLAGS_APP = $(MACHDEP) -specs=newrvl.spec -Wl,--section-start,.init=$(BASE_ADDR) \
